@@ -1,0 +1,20 @@
+server:
+  port: 8008
+
+spring:
+  application:
+    name: zuul-service
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8000/eureka/
+
+zuul:
+  routes:
+    api-a:
+      path: /api-a/**
+      serviceId: RIBBION-SERVICE
+    api-b:
+      path: /api-b/**
+      serviceId: FEGIN-SERVICE

@@ -1,0 +1,47 @@
+
+server:
+  port: 8020
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: neo_route
+          uri: lb://eurka-client1
+          predicates:
+            - Method=POST
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 10
+                key-resolver: "#{@ipResolver}"
+
+  redis:
+    database: 0
+    host: 10.38.64.178
+    port: 6379
+    password:
+    timeout: 500
+    jedis:
+      pool:
+        min-idle: 200
+        max-idle: 200
+        max-active: 2000
+        max-wait: 10000
+
+logging:
+  level:
+    org.springframework.cloud.gateway: debug
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9000/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include=*:
